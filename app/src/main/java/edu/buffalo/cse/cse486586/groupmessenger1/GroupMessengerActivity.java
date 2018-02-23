@@ -87,7 +87,6 @@ public class GroupMessengerActivity extends Activity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Code from project 1
                 String msg = editText.getText().toString() + "\n";
                 editText.setText(""); // This is one way to reset the input box.
                 TextView localTextView = (TextView) findViewById(R.id.textView1);
@@ -97,8 +96,6 @@ public class GroupMessengerActivity extends Activity {
                 remoteTextView.append("\n");
                 new ClientTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, msg, myPort);
 
-                //Code from project 1
-
 
             }
         });
@@ -107,8 +104,6 @@ public class GroupMessengerActivity extends Activity {
 
 
     }
-
-    //Code sample from project 1 Start
     private class ServerTask extends AsyncTask<ServerSocket, String, Void>{
         @Override
         protected Void doInBackground(ServerSocket... sockets) {
@@ -177,10 +172,6 @@ public class GroupMessengerActivity extends Activity {
 
     }
 
-    //Code sample from project 1 End
-
-
-    //Client code taken from project 1
     private class ClientTask extends AsyncTask<String, Void, Void> {
 
         @Override
@@ -212,7 +203,6 @@ public class GroupMessengerActivity extends Activity {
             return null;
         }
     }
-    //End Client code taken from project 1
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
