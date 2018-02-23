@@ -120,14 +120,18 @@ public class GroupMessengerProvider extends ContentProvider {
         }
 
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
+            Log.e(TAG, " QueryTask UnknownHostException");
         }
 
         catch(IOException ie){
-            ie.printStackTrace();
+           // ie.printStackTrace();
+            Log.e(TAG, "QueryTask IOException");
         }
         catch(Exception e){
-            e.printStackTrace();//general exception
+         //   e.printStackTrace();//general exception
+            Log.e(TAG, "QueryTask General Exception");
+
 
         }
 
