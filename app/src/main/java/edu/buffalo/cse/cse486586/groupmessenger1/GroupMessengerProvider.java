@@ -2,9 +2,19 @@ package edu.buffalo.cse.cse486586.groupmessenger1;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 
 /**
  * GroupMessengerProvider is a key-value table. Once again, please note that we do not implement
@@ -25,6 +35,7 @@ import android.util.Log;
  *
  */
 public class GroupMessengerProvider extends ContentProvider {
+    static final String TAG = GroupMessengerActivity.class.getSimpleName();
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -50,6 +61,19 @@ public class GroupMessengerProvider extends ContentProvider {
          * internal storage option that we used in PA1. If you want to use that option, please
          * take a look at the code for PA1.
          */
+
+        String filename = values.getAsString("key");
+        String string = values.getAsString("value");
+        FileOutputStream outputStream;
+
+        try {
+            outputStream = getContext().openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(string.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            Log.e(TAG, "File write failed");
+        }
+
         Log.v("insert", values.toString());
         return uri;
     }
@@ -80,7 +104,39 @@ public class GroupMessengerProvider extends ContentProvider {
          * recommend building a MatrixCursor described at:
          * http://developer.android.com/reference/android/database/MatrixCursor.html
          */
-        Log.v("query", selection);
-        return null;
+
+        StringBuilder sb = new StringBuilder();
+        try {
+            InputStream is = getContext().openFileInput(selection);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            String temp;
+            while ((temp = br.readLine()) != null) {
+                sb.append(temp);
+            }
+            br.close();
+
+
+        }
+
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        catch(IOException ie){
+            ie.printStackTrace();
+        }
+        catch(Exception e){
+            e.printStackTrace();//general exception
+
+        }
+
+        String[] column = {"key", "value"};
+        String[] row = {selection, sb.toString()};
+        MatrixCursor matrixCursor = new MatrixCursor(column);
+        matrixCursor.addRow(row);
+
+
+        return matrixCursor;
     }
 }
